@@ -1,25 +1,29 @@
 extends Node2D
 
-
+@export_enum("Fractal Tree", "Dragon Curve", "Sierpinski Triangle", "Fractal Plant") var rule = "Fractal Tree"
 @onready var line_container = $LineContainer
 var lines = []
 
 func _ready():
 	
-	await get_tree().process_frame
-	await get_tree().process_frame
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 	var center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y / 2)
 	var bottom_center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y)
 	var bottom_right = Vector2(get_viewport_rect().end.x / 3 * 2, get_viewport_rect().end.y)
 	
-	lines = generate(bottom_center, 5, 0.6, Color(0.9, 0.6, 1.0, 0.7), 2.0, FractalTree.new())
-	#lines = generate(center, 15, 0.8, Color(0.5, 1, 1, 1.0), 1, DragonCurve.new())
-	#lines = generate(bottom_right, 6, 0.7, Color.RED, 2.0, SierpinskiTriangle.new())
-	#lines = generate(bottom_center, 7, 0.57, Color(0.2, 0.7, 1.0, 0.6), 1.0, FractalPlant.new())
+	if rule == "Fractal Tree":
+		lines = generate(bottom_center, 5, 0.6, Color(0.9, 0.6, 1.0, 0.7), 2.0, FractalTree.new())
+	elif rule == "Dragon Curve":
+		lines = generate(center, 15, 0.8, Color(0.5, 1, 1, 1.0), 1, DragonCurve.new())
+	elif rule == "Sierpinski Triangle":
+		lines = generate(bottom_right, 6, 0.7, Color.RED, 2.0, SierpinskiTriangle.new())
+	elif rule == "Fractal Plant":
+		lines = generate(bottom_center, 7, 0.57, Color(0.2, 0.7, 1.0, 0.6), 1.0, FractalPlant.new())
 	
 
 	
-func _process(delta):
+func _physics_process(_delta):
 	
 	if lines.is_empty():
 		return
