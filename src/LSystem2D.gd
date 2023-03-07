@@ -1,32 +1,32 @@
 extends Node2D
 
 
-onready var line_container = $LineContainer
+@onready var line_container = $LineContainer
 var lines = []
 
 func _ready():
 	
-	yield(get_tree(), "idle_frame")
-	yield(get_tree(), "idle_frame")
+	await get_tree().process_frame
+	await get_tree().process_frame
 	var center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y / 2)
 	var bottom_center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y)
 	var bottom_right = Vector2(get_viewport_rect().end.x / 3 * 2, get_viewport_rect().end.y)
 	
 	lines = generate(bottom_center, 5, 0.6, Color(0.9, 0.6, 1.0, 0.7), 2.0, FractalTree.new())
 	#lines = generate(center, 15, 0.8, Color(0.5, 1, 1, 1.0), 1, DragonCurve.new())
-	#lines = generate(bottom_right, 6, 0.7, Color.red, 2.0, SierpinskiTriangle.new())
+	#lines = generate(bottom_right, 6, 0.7, Color.RED, 2.0, SierpinskiTriangle.new())
 	#lines = generate(bottom_center, 7, 0.57, Color(0.2, 0.7, 1.0, 0.6), 1.0, FractalPlant.new())
 	
 
 	
 func _process(delta):
 	
-	if lines.empty():
+	if lines.is_empty():
 		return
 	var lines_per_frame = 100000
 	for index in lines_per_frame:
 		line_container.add_child(lines.pop_front())	
-		if lines.empty():
+		if lines.is_empty():
 			break
 			
 
@@ -48,7 +48,7 @@ func generate(start_position, iterations, length_reduction, color, width, rule):
 	for index in arrangement:
 		match rule.get_action(index):
 			"draw_forward":
-				var to = from + Vector2(0, length).rotated(deg2rad(rot))
+				var to = from + Vector2(0, length).rotated(deg_to_rad(rot))
 				var line = Line2D.new()
 				line.default_color = color
 				line.width = width
