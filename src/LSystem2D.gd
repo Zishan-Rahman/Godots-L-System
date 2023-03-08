@@ -1,6 +1,6 @@
 extends Node2D
 
-@export_enum("Fractal Tree", "Dragon Curve", "Sierpinski Triangle", "Fractal Plant") var rule = "Fractal Tree"
+@export_enum("Fractal Tree", "Dragon Curve", "Sierpinski Triangle", "Fractal Plant", "Lattice") var rule = "Fractal Tree"
 @onready var line_container = $LineContainer
 var lines = []
 
@@ -11,16 +11,18 @@ func _ready():
 	var center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y / 2)
 	var bottom_center = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y)
 	var bottom_right = Vector2(get_viewport_rect().end.x / 3 * 2, get_viewport_rect().end.y)
+	var center_long = Vector2(get_viewport_rect().end.x / 2, get_viewport_rect().end.y / 10)
 	
 	if rule == "Fractal Tree":
 		lines = generate(bottom_center, 5, 0.6, Color(0.9, 0.6, 1.0, 0.7), 2.0, FractalTree.new())
 	elif rule == "Dragon Curve":
-		lines = generate(center, 15, 0.8, Color(0.5, 1, 1, 1.0), 1, DragonCurve.new())
+		lines = generate(center, 15, 0.8, Color(0.5, 1, 1, 1.0), 1.0, DragonCurve.new())
 	elif rule == "Sierpinski Triangle":
 		lines = generate(bottom_right, 6, 0.7, Color.RED, 2.0, SierpinskiTriangle.new())
 	elif rule == "Fractal Plant":
 		lines = generate(bottom_center, 7, 0.57, Color(0.2, 0.7, 1.0, 0.6), 1.0, FractalPlant.new())
-	
+	elif rule == "Lattice":
+		lines = generate(center_long, 3, 0.35, Color.NAVY_BLUE, 1.0, Lattice.new())
 
 	
 func _physics_process(_delta):
@@ -34,7 +36,7 @@ func _physics_process(_delta):
 			break
 			
 
-func generate(start_position, iterations, length_reduction, color, width, rule):
+func generate(start_position: Vector2, iterations: int, length_reduction: float, color: Color, width: float, rule: Rule):
 	var length = -200
 	var arrangement = rule.axiom
 	for i in iterations:
@@ -151,9 +153,18 @@ class FractalPlant extends Rule:
 			"[" : "store",
 			"]" : "load"
 		}
-
-	
-	
-	
 		
-	
+		
+class Lattice extends Rule:
+	func _init():
+		self.axiom = "F+F+F+F"
+		self.angle = 90
+		self.rules = {
+			"F": "F+F−F−FF+F+F−F"
+		}
+		self.actions = {
+			"F" : "draw_forward",
+			"+" : "rotate_right",
+			"-" : "rotate_left"
+		}
+		
