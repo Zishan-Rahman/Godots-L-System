@@ -13,7 +13,6 @@ config_version=5
 config/name="L System Trees"
 run/main_scene="res://src/LSystem2D.tscn"
 config/features=PackedStringArray("4.0")
-config/icon="res://icon.png"
 
 [debug]
 
@@ -26,4 +25,3 @@ window/size/fullscreen=true
 [rendering]
 
 environment/defaults/default_clear_color=Color(0.0705882, 0.0705882, 0.0705882, 1)
-environment/defaults/default_environment="res://default_env.tres"
